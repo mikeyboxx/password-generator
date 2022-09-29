@@ -9,15 +9,13 @@ const SPECIAL = 'S';
 const LOWER_CHARS = 'abcdefghijklmnopqrstuvwxyz';
 const UPPER_CHARS = LOWER_CHARS.toUpperCase();
 const NUMERIC_CHARS = '0123456789';
-const SPECIAL_CHARS = `" !"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~"`;
+const SPECIAL_CHARS = ` !"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~`;
 
 
-
-// generates a random number between 0 and (limit - 1)
+// Generates a random number between 0 and (limit - 1) and returns it.
 function generateRandomNbr(limit){
     return (Math.floor(Math.random() * limit));
 }
-
 
 // Prompt user for length and validate. 
 // Once validated, return the length entered.
@@ -31,7 +29,6 @@ function promptForLength(){
             valid = true;
         }
     }
-  
     return len;
 }
 
@@ -58,67 +55,66 @@ function promptForTypes(){
             alert('You must select at least one character type!  Try again...');
         }
     }
-
     return arr;
 }
 
-
-// convert each string to an array and combine them all into one array
+// Convert each string to an array and combine all arrays into one. Return the combined array.
 function createPasswordCharList(arr){
     var pwdArr = [];
 
     for (var i = 0; i < arr.length; i++){
         switch (arr[i]){
-            case LOWER: pwdArr.concat(LOWER_CHARS.split(''));
+            case LOWER: pwdArr =  pwdArr.concat(LOWER_CHARS.split(''));
                 break;
-            case UPPER: pwdArr.concat(UPPER_CHARS.split(''));
+            case UPPER: pwdArr =  pwdArr.concat(UPPER_CHARS.split(''));
                 break;
-            case NUMERIC: pwdArr.concat(NUMERIC_CHARS.split(''));
+            case NUMERIC: pwdArr =  pwdArr.concat(NUMERIC_CHARS.split(''));
                 break;
-            case SPECIAL: pwdArr.concat(SPECIAL_CHARS.split(''));
+            case SPECIAL: pwdArr =  pwdArr.concat(SPECIAL_CHARS.split(''));
                 break;
         }
     }
-
     return pwdArr
 }
 
-
-
+// Loop as many times as the length of the password. For every pass, 
+// generate a random number from 0 to length of the Character array. 
+// Use the generated number as an index to get the char and push it in
+// a resulting array. Return the resulting array.
 function generatePassword(passwordLen, charArr){
     var passwordArr = [];
-    var nbr;
-
 
     for (var i = 0; i < passwordLen; i++){
-        nbr = generateRandomNbr(charArr.length);
+       var nbr = generateRandomNbr(charArr.length);
         passwordArr.push(charArr[nbr]);
     }
-
     return passwordArr;
 }
-
-
 
 // Write password to the #password input
 function writePassword(password) {
     var passwordText = document.querySelector("#password");
-
     passwordText.value = password;
 }
 
-
+// This function gets called upon a button click event.  It calls 
+// functions that prompt the user for password length and for allowed character types.
+// It then calls a function to construct an array of generated random characters, which
+// is converted to a string.  This string is then passed to a function that outputs
+// the string to the screen. 
 function generatePasswordString(){
     var pwdLen = promptForLength();
     var pwdTypesArr = promptForTypes();
     var pwdCharListArr = createPasswordCharList(pwdTypesArr);
     var pwdCharArr = generatePassword(pwdLen, pwdCharListArr);
 
-    writePassword(pwdCharArr.toString());
+    writePassword(pwdCharArr.join(''));
 }
 
+// This function attaches a callback function to a button's click event 
+// which does the work to generate a random password and output it to the screen.
 function main(){
-    // retrieve the DOM Button element
+    // retrieve the DOM Button element with the id 'generate'
     var generateBtn = document.querySelector("#generate");
     
     // Add event listener to DOM Button element
@@ -126,25 +122,3 @@ function main(){
 }
 
 main();
-
-
-
-
-
-
-
-// GIVEN I need a new, secure password
-// WHEN I click the button to generate a password
-// THEN I am presented with a series of prompts for password criteria
-// WHEN prompted for password criteria
-// THEN I select which criteria to include in the password
-// WHEN prompted for the length of the password
-// THEN I choose a length of at least 8 characters and no more than 128 characters
-// WHEN asked for character types to include in the password
-// THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters
-// WHEN I answer each prompt
-// THEN my input should be validated and at least one character type should be selected
-// WHEN all prompts are answered
-// THEN a password is generated that matches the selected criteria
-// WHEN the password is generated
-// THEN the password is either displayed in an alert or written to the page
